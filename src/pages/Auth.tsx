@@ -24,9 +24,16 @@ export default function AuthPage() {
       redirect_uri: window.location.origin,
     });
     setGoogleLoading(false);
-    if (error) {
-      toast({ title: "Error", description: error.message, variant: "destructive" });
+
+    if (!error) return;
+
+    const message = error.message?.toLowerCase() ?? "";
+    if (message.includes("cancelled") || message.includes("canceled")) {
+      toast({ title: "Sign-in cancelled", description: "Please choose a Google account to continue." });
+      return;
     }
+
+    toast({ title: "Error", description: error.message, variant: "destructive" });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
